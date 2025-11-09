@@ -1,0 +1,82 @@
+campaignId: mcdonalds-autumn-specials-2024
+products:
+  - productId: crispy-chicken-deluxe
+    name: Crispy Chicken Deluxe
+    description: "Tender, crispy chicken breast topped with fresh lettuce, ripe tomatoes, and our signature creamy mayo on a toasted sesame seed bun. Made with 100% chicken breast."
+    category: food
+    assets:
+      logo: examples/mcdonalds/input/mcdonalds.png
+      image: examples/mcdonalds/input/crispy-chicken-deluxe.png
+    localizations:
+      de-DE:
+        name: Crispy Chicken Deluxe
+        description: "Zartes, knuspriges Hähnchenbrustfilet mit frischem Salat, reifen Tomaten und unserer köstlichen cremigen Mayo auf einem getoasteten Sesambrötchen. Aus 100% Hähnchenbrustfilet."
+      
+  - productId: double-quarter-pounder
+    name: Double Quarter Pounder with Cheese
+    description: "Two 100% fresh beef quarter pound patties that are hot, deliciously juicy and cooked when you order. Seasoned with just a pinch of salt and pepper, sizzled on a flat grill, and topped with melty American cheese, pickles, onions, ketchup and mustard."
+    category: food
+    assets:
+      logo: examples/mcdonalds/input/mcdonalds.png
+      image: examples/mcdonalds/input/double-quarter-pounder.png
+    localizations:
+      de-DE:
+        name: Double Quarter Pounder mit Käse
+        description: "Zwei 100% frische Rindfleisch-Quarter-Pound-Patties, heiß und saftig zubereitet. Mit nur etwas Salz und Pfeffer gewürzt, auf dem flachen Grill gebraten und mit schmelzendem amerikanischem Käse, Gurken, Zwiebeln, Ketchup und Senf belegt."
+
+  - productId: mcflurry-oreo
+    name: OREO McFlurry
+    description: "The McDonald's McFlurry with OREO Cookies is a popular combination of creamy vanilla soft serve with OREO cookie pieces mixed throughout. Available in Regular and Snack sizes."
+    category: dessert
+    assets:
+      logo: examples/mcdonalds/input/mcdonalds.png
+      image: examples/mcdonalds/input/mcflurry-oreo.png
+    localizations:
+      de-DE:
+        name: OREO McFlurry
+        description: "Der McDonald's McFlurry mit OREO Cookies ist eine beliebte Kombination aus cremigem Vanilleeis mit OREO-Keksstücken. Erhältlich in Regular und Snack-Größen."
+
+
+targetRegion: Europe
+targetMarket: Germany
+targetAudience: "Families, young professionals, and students aged 18-45 looking for quick, delicious meals and treats"
+campaignMessage: "Taste the Golden Moments - New Autumn Menu!"
+
+brandGuidelines:
+  primaryColors:
+    - "#FFC72C"  # McDonald's Yellow
+    - "#DA291C"  # McDonald's Red
+  secondaryColors:
+    - "#27251F"  # Black
+    - "#FFFFFF"  # White
+  fontFamily: "Speedee, Arial, sans-serif"
+  logoRequired: true
+  prohibitedWords:
+    - "healthy"
+    - "diet"
+    - "organic"
+    - "gourmet"
+    - "artisanal"
+
+localizations:
+  en-US:
+    language: "English (US)"
+    message: "Taste the Golden Moments - New Autumn Menu!"
+    culturalNotes: "Emphasize convenience, value, and family-friendly atmosphere"
+    prohibitedWords:
+      - "healthy"
+      - "diet"
+      - "organic"
+      - "gourmet"
+      - "artisanal"
+    
+  de-DE:
+    language: "German (Germany)"
+    message: "Erlebe goldene Momente - Neue Herbst-Menüs!"
+    culturalNotes: "Germans appreciate quality ingredients and local sourcing. Emphasize freshness and tradition while maintaining the fun, accessible McDonald's brand"
+    prohibitedWords:
+      - "gesund"
+      - "diät"
+      - "bio"
+      - "gourmet"
+      - "handwerklich"

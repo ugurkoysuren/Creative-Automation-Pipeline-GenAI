@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cat:*)",
+      "Bash(mvn test:*)",
+      "Bash(find:*)",
+      "Bash(chmod:*)",
+      "Bash(./run.sh:*)",
+      "Bash(make help:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

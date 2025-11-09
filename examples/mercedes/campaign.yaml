@@ -1,0 +1,53 @@
+campaignId: mercedes-eqe-launch-2024
+products:
+  - productId: eqe-350-sedan
+    name: Mercedes-EQ EQE 350+ Sedan
+    description: "Experience electric luxury redefined. The all-new EQE 350+ delivers up to 410 miles of range with cutting-edge MBUX Hyperscreen technology, advanced driver assistance, and whisper-quiet performance. Crafted with sustainable materials and uncompromising Mercedes-Benz quality."
+    category: electric-vehicle
+    assets: {}
+      
+  - productId: eqe-amg-53
+    name: Mercedes-AMG EQE 53 4MATIC+
+    description: "Pure electric performance meets AMG craftsmanship. 0-60 mph in 3.2 seconds with AMG Dynamic Plus package. Advanced aerodynamics, adaptive suspension, and the iconic AMG sound experience - now fully electric."
+    category: electric-performance
+    assets: {}
+      
+  - productId: eqe-suv
+    name: Mercedes-EQ EQE SUV
+    description: "Elevated luxury meets electric innovation. Spacious interior with premium appointments, intelligent 4MATIC all-wheel drive, and up to 305 miles of range. The perfect blend of versatility and sophistication."
+    category: electric-suv
+    assets: {}
+
+targetRegion: Europe
+targetMarket: Germany
+targetAudience: "Affluent professionals and executives aged 35-65 seeking luxury, innovation, and sustainable mobility without compromise"
+campaignMessage: "The Future of Luxury is Electric"
+
+brandGuidelines:
+  primaryColors:
+    - "#00ADEF"  # Mercedes Electric Blue
+    - "#000000"  # Black
+  secondaryColors:
+    - "#C0C0C0"  # Silver
+    - "#FFFFFF"  # White
+    - "#1A1A1A"  # Dark Grey
+  fontFamily: "Mercedes-Benz Corporate, Arial, sans-serif"
+  logoRequired: false  # Demonstrates handling missing assets
+  prohibitedWords:
+    - "cheap"
+    - "budget"
+    - "economy"
+    - "basic"
+    - "standard"
+
+localizations:
+  en-US:
+    language: "English (US)"
+    message: "The Future of Luxury is Electric"
+    culturalNotes: "Emphasize innovation, performance, and cutting-edge technology. Highlight the emotional connection to the Mercedes-Benz heritage"
+    
+  de-DE:
+    language: "German (Germany)"
+    message: "Die Zukunft des Luxus ist elektrisch"
+    culturalNotes: "Germans highly value engineering excellence and quality. Emphasize 'Engineered in Germany', precision, and the brand's legacy of automotive innovation. Sustainability without sacrifice is key"
+
