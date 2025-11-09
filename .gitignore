@@ -24,7 +24,6 @@ buildNumber.properties
 .env.local
 
 # Generated assets
-assets/output/
 *.log
 logs/
 

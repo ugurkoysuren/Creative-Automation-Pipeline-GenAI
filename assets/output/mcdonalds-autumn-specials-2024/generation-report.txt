@@ -1,0 +1,141 @@
+================================================================================
+CREATIVE AUTOMATION PIPELINE - GENERATION REPORT
+================================================================================
+
+SUMMARY:
+  Total Assets Generated: 18
+  New Images Generated:   18
+  Existing Images Reused: 0
+  Images Resized:         0
+  Compliance Issues:      0
+  Duration:               6,68s
+  Status:                 SUCCESS
+
+GENERATED ASSETS:
+  assets/output/mcdonalds-autumn-specials-2024-en-us/crispy-chicken-deluxe/crispy-chicken-deluxe_1x1.png
+    Product: Crispy Chicken Deluxe
+    Aspect Ratio: 1:1 (Instagram Post, Facebook Post)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/crispy-chicken-deluxe/crispy-chicken-deluxe_9x16.png
+    Product: Crispy Chicken Deluxe
+    Aspect Ratio: 9:16 (Instagram Story, TikTok, Reels)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/crispy-chicken-deluxe/crispy-chicken-deluxe_16x9.png
+    Product: Crispy Chicken Deluxe
+    Aspect Ratio: 16:9 (YouTube, Facebook Video, LinkedIn)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/double-quarter-pounder/double-quarter-pounder_1x1.png
+    Product: Double Quarter Pounder with Cheese
+    Aspect Ratio: 1:1 (Instagram Post, Facebook Post)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/double-quarter-pounder/double-quarter-pounder_9x16.png
+    Product: Double Quarter Pounder with Cheese
+    Aspect Ratio: 9:16 (Instagram Story, TikTok, Reels)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/double-quarter-pounder/double-quarter-pounder_16x9.png
+    Product: Double Quarter Pounder with Cheese
+    Aspect Ratio: 16:9 (YouTube, Facebook Video, LinkedIn)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/mcflurry-oreo/mcflurry-oreo_1x1.png
+    Product: OREO McFlurry
+    Aspect Ratio: 1:1 (Instagram Post, Facebook Post)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/mcflurry-oreo/mcflurry-oreo_9x16.png
+    Product: OREO McFlurry
+    Aspect Ratio: 9:16 (Instagram Story, TikTok, Reels)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-en-us/mcflurry-oreo/mcflurry-oreo_16x9.png
+    Product: OREO McFlurry
+    Aspect Ratio: 16:9 (YouTube, Facebook Video, LinkedIn)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/crispy-chicken-deluxe/crispy-chicken-deluxe_1x1.png
+    Product: Crispy Chicken Deluxe
+    Aspect Ratio: 1:1 (Instagram Post, Facebook Post)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/crispy-chicken-deluxe/crispy-chicken-deluxe_9x16.png
+    Product: Crispy Chicken Deluxe
+    Aspect Ratio: 9:16 (Instagram Story, TikTok, Reels)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/crispy-chicken-deluxe/crispy-chicken-deluxe_16x9.png
+    Product: Crispy Chicken Deluxe
+    Aspect Ratio: 16:9 (YouTube, Facebook Video, LinkedIn)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/double-quarter-pounder/double-quarter-pounder_1x1.png
+    Product: Double Quarter Pounder mit Käse
+    Aspect Ratio: 1:1 (Instagram Post, Facebook Post)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/double-quarter-pounder/double-quarter-pounder_9x16.png
+    Product: Double Quarter Pounder mit Käse
+    Aspect Ratio: 9:16 (Instagram Story, TikTok, Reels)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/double-quarter-pounder/double-quarter-pounder_16x9.png
+    Product: Double Quarter Pounder mit Käse
+    Aspect Ratio: 16:9 (YouTube, Facebook Video, LinkedIn)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/mcflurry-oreo/mcflurry-oreo_1x1.png
+    Product: OREO McFlurry
+    Aspect Ratio: 1:1 (Instagram Post, Facebook Post)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/mcflurry-oreo/mcflurry-oreo_9x16.png
+    Product: OREO McFlurry
+    Aspect Ratio: 9:16 (Instagram Story, TikTok, Reels)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+  assets/output/mcdonalds-autumn-specials-2024-de-de/mcflurry-oreo/mcflurry-oreo_16x9.png
+    Product: OREO McFlurry
+    Aspect Ratio: 16:9 (YouTube, Facebook Video, LinkedIn)
+    Method: native
+    Compliance: PASSED
+    Warnings: Consider adding a clear call-to-action
+
+================================================================================
