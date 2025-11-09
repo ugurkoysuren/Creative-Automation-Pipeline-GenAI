@@ -270,6 +270,7 @@ Typical generation times (MacBook Pro M1):
 - More image filters and effects
 - REST API for campaign submission
 - Database persistence
+- **Agentic System**: See [AGENTIC_ARCHITECTURE.md](AGENTIC_ARCHITECTURE.md) for autonomous monitoring and orchestration design
 
 ## License
 

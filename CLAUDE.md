@@ -192,3 +192,8 @@ java -Djava.awt.headless=true -jar target/creative-automation-pipeline-1.0.0-jar
 - Text overlays use fixed Arial font (not customizable per brand)
 - Parallel product processing not implemented (sequential only)
 - No caching of generated AI images between runs
+
+## Related Documentation
+
+- **[AGENTIC_ARCHITECTURE.md](AGENTIC_ARCHITECTURE.md)**: Comprehensive design for autonomous agent system that monitors campaigns, flags issues, and manages stakeholder communications
+- **[IMPROVEMENTS.md](IMPROVEMENTS.md)**: Summary of recent improvements including test fixes, code quality enhancements, and new developer tools
