@@ -28,50 +28,183 @@ This document defines the architecture for an AI-driven autonomous agent system 
 ### High-Level Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Agentic Orchestrator                       │
-│                     (AI-Driven Coordinator)                     │
-└─────────────────────────────────────────────────────────────────┘
-                                 │
-                ┌────────────────┼────────────────┐
-                │                │                │
-                ▼                ▼                ▼
-    ┌──────────────────┐  ┌──────────────┐  ┌──────────────┐
-    │  Brief Monitor   │  │   Quality    │  │ Stakeholder  │
-    │     Agent        │  │   Guardian   │  │ Communicator │
-    │                  │  │    Agent     │  │    Agent     │
-    └──────────────────┘  └──────────────┘  └──────────────┘
-            │                     │                  │
-            ▼                     ▼                  ▼
-    ┌──────────────────┐  ┌──────────────┐  ┌──────────────┐
-    │ Campaign Queue   │  │  Validation  │  │    Email     │
-    │   Management     │  │   Results    │  │   Slack      │
-    │                  │  │   Database   │  │   PagerDuty  │
-    └──────────────────┘  └──────────────┘  └──────────────┘
-            │
-            ▼
-    ┌──────────────────────────────────────────────────────────┐
-    │         Creative Automation Pipeline (Existing)          │
-    │  BriefParser → CreativeGenerator → ComplianceValidator   │
-    └──────────────────────────────────────────────────────────┘
+                    ┌─────────────────────────────────────┐
+                    │       Decision Agent (LLM)          │
+                    │    AI-Driven Strategic Decision     │
+                    │         Making & Planning           │
+                    └─────────────────────────────────────┘
+                                    │
+                ┌───────────────────┼───────────────────┐
+                │                   │                   │
+                ▼                   ▼                   ▼
+    ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+    │  Monitoring      │  │   Executing      │  │  Communication   │
+    │    Agent         │  │     Agent        │  │     Agent        │
+    │                  │  │                  │  │                  │
+    │ • Brief Watch    │  │ • Pipeline Run   │  │ • LLM Drafting   │
+    │ • Queue Track    │  │ • Asset Gen      │  │ • Email/Slack    │
+    │ • Quality Check  │  │ • Validation     │  │ • PagerDuty      │
+    │ • Metrics Collect│  │ • Retry Logic    │  │ • JIRA Tickets   │
+    └──────────────────┘  └──────────────────┘  └──────────────────┘
+            │                     │                      │
+            ▼                     ▼                      ▼
+    ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+    │ • File Watcher   │  │ Campaign Queue   │  │ Stakeholder DB   │
+    │ • S3 Poller      │  │ Validation DB    │  │ Template Store   │
+    │ • Metrics DB     │  │ Asset Storage    │  │ Alert History    │
+    └──────────────────┘  └──────────────────┘  └──────────────────┘
+                                  │
+                                  ▼
+                    ┌──────────────────────────────────┐
+                    │   Creative Automation Pipeline   │
+                    │  BriefParser → CreativeGenerator │
+                    │      → ComplianceValidator       │
+                    └──────────────────────────────────┘
 ```
 
-### Component Overview
+### Four-Agent Architecture
 
-| Component | Purpose | Autonomy Level |
-|-----------|---------|----------------|
-| **Agentic Orchestrator** | Central coordinator using LLM reasoning | Fully Autonomous |
-| **Brief Monitor Agent** | Watches for new briefs, validates inputs | Semi-Autonomous |
-| **Quality Guardian Agent** | Tracks variants, flags issues | Fully Autonomous |
-| **Stakeholder Communicator** | Drafts and sends alerts | Human-in-loop |
+| Agent | Purpose | Autonomy Level | Key Responsibilities |
+|-------|---------|----------------|---------------------|
+| **Monitoring Agent** | Observes system state, briefs, and quality | Fully Autonomous | Brief intake, queue tracking, quality validation, metrics collection |
+| **Decision Agent** | Strategic planning and intelligent routing | Fully Autonomous | LLM-powered prioritization, resource allocation, issue triage, resolution planning |
+| **Executing Agent** | Runs pipeline and manages generation | Semi-Autonomous | Campaign processing, asset generation, validation execution, retry logic |
+| **Communication Agent** | Stakeholder notifications and reporting | Human-in-Loop | LLM-drafted alerts, multi-channel delivery, escalation management |
 
 ---
 
 ## Agent Responsibilities
 
-### 1. Agentic Orchestrator
+### 1. Monitoring Agent
 
-**Role**: Central AI-driven decision maker that coordinates all other agents.
+**Role**: Continuously observes system inputs, queue state, and output quality.
+
+**Capabilities**:
+- **Brief Intake Monitoring**: Watches file systems, S3 buckets, and API endpoints for new campaign briefs
+- **Queue State Tracking**: Monitors campaign processing queue depth, wait times, and throughput
+- **Quality Validation**: Tracks variant counts, aspect ratio coverage, compliance rates, and asset quality
+- **Metrics Collection**: Gathers performance data, success rates, and system health indicators
+- **Anomaly Detection**: Identifies unusual patterns in processing times, failure rates, or quality scores
+
+**Brief Watching & Validation**:
+```yaml
+Monitoring Rules:
+  - Directory Watch:
+      path: /briefs/incoming/
+      pattern: "*.yaml, *.json"
+      interval: 30s
+
+  - S3 Bucket:
+      bucket: campaign-briefs-prod
+      prefix: incoming/
+      interval: 60s
+
+  - Webhook:
+      endpoint: /api/v1/briefs/submit
+      auth: bearer-token
+```
+
+**Validation Checks**:
+1. Valid YAML/JSON syntax
+2. Required fields present (campaignId, products, targetRegion, etc.)
+3. Product assets exist or can be generated
+4. Localization configs are complete
+5. Brand guidelines are specified
+
+**Quality Validation Rules**:
+
+| Condition | Severity | Action |
+|-----------|----------|--------|
+| < 3 variants per product | WARNING | Flag for Decision Agent review |
+| Missing aspect ratio | ERROR | Trigger regeneration via Executing Agent |
+| > 50% compliance failures | CRITICAL | Escalate to Decision Agent + Communication Agent |
+| GenAI API failure | CRITICAL | Alert Decision Agent for strategy change |
+| Processing time > 2x average | WARNING | Flag performance issue |
+
+**Implementation**:
+```java
+public class MonitoringAgent {
+    private static final int MIN_VARIANTS = 3;
+    private static final Set<String> REQUIRED_RATIOS = Set.of("1:1", "9:16", "16:9");
+
+    @Scheduled(fixedRate = 30000) // Every 30 seconds
+    public void monitorBriefs() {
+        List<Path> newBriefs = scanForNewBriefs();
+        for (Path brief : newBriefs) {
+            validateAndNotify(brief);
+        }
+    }
+
+    @Scheduled(fixedRate = 60000) // Every minute
+    public void monitorQueueHealth() {
+        QueueMetrics metrics = queue.getMetrics();
+
+        if (metrics.getDepth() > 50) {
+            decisionAgent.notifyHighQueueDepth(metrics);
+        }
+
+        if (metrics.getAverageWaitTime() > Duration.ofMinutes(30)) {
+            decisionAgent.notifySlowProcessing(metrics);
+        }
+    }
+
+    public QualityReport validateQuality(GenerationResult result) {
+        List<QualityIssue> issues = new ArrayList<>();
+
+        // 1. Check variant count per product
+        Map<String, Integer> variantCounts = countVariantsByProduct(result);
+        for (var entry : variantCounts.entrySet()) {
+            if (entry.getValue() < MIN_VARIANTS) {
+                issues.add(QualityIssue.warning(
+                    "INSUFFICIENT_VARIANTS",
+                    String.format("Product %s has only %d variants (minimum: %d)",
+                        entry.getKey(), entry.getValue(), MIN_VARIANTS)
+                ));
+            }
+        }
+
+        // 2. Check aspect ratio coverage
+        Set<String> generatedRatios = result.getAssets().stream()
+            .map(a -> a.getAspectRatio().getName())
+            .collect(Collectors.toSet());
+
+        Set<String> missing = new HashSet<>(REQUIRED_RATIOS);
+        missing.removeAll(generatedRatios);
+
+        if (!missing.isEmpty()) {
+            issues.add(QualityIssue.error(
+                "MISSING_ASPECT_RATIOS",
+                "Missing required aspect ratios: " + String.join(", ", missing)
+            ));
+        }
+
+        // 3. Check compliance failures
+        long complianceFailures = result.getAssets().stream()
+            .filter(a -> !a.getMetadata().getComplianceChecks().isBrandCompliant() ||
+                         !a.getMetadata().getComplianceChecks().isLegalCompliant())
+            .count();
+
+        double failureRate = (double) complianceFailures / result.getAssets().size();
+
+        if (failureRate > 0.5) {
+            issues.add(QualityIssue.critical(
+                "HIGH_COMPLIANCE_FAILURE_RATE",
+                String.format("%.0f%% of assets failed compliance checks", failureRate * 100)
+            ));
+        }
+
+        // Report to Decision Agent for triage
+        QualityReport report = new QualityReport(result.getCampaignId(), issues);
+        decisionAgent.triageQualityIssues(report);
+
+        return report;
+    }
+}
+```
+
+### 2. Decision Agent
+
+**Role**: Central AI-driven decision maker powered by LLM reasoning that coordinates all other agents.
 
 **Capabilities**:
 - Analyzes campaign priorities based on deadlines, complexity, and resource availability
@@ -99,204 +232,311 @@ public class AgenticOrchestrator {
 }
 ```
 
-### 2. Brief Monitor Agent
+**Strategic Decision Making**:
+```java
+public class DecisionAgent {
+    private LLMReasoner llm;
+    private MonitoringAgent monitor;
 
-**Role**: Continuously monitors for new campaign briefs and manages intake queue.
+    public ProcessingDecision decidePriority(CampaignBrief brief) {
+        // Gather context from Monitoring Agent
+        SystemContext context = monitor.getSystemContext();
 
-**Capabilities**:
-- **File System Watching**: Monitors `examples/` and designated input directories
-- **S3/Cloud Storage Integration**: Polls cloud storage for new briefs
-- **API Endpoint Listening**: Receives briefs via REST API
-- **Validation**: Pre-validates brief structure before queueing
-- **Prioritization**: Assigns priority based on brief metadata (deadline, client tier)
+        // Build LLM prompt for priority decision
+        String prompt = buildPriorityPrompt(brief, context);
 
-**Triggering Logic**:
-```yaml
-Monitoring Rules:
-  - Directory Watch:
-      path: /briefs/incoming/
-      pattern: "*.yaml, *.json"
-      interval: 30s
+        // LLM analyzes and decides
+        LLMResponse response = llm.reason(prompt);
 
-  - S3 Bucket:
-      bucket: campaign-briefs-prod
-      prefix: incoming/
-      interval: 60s
+        Priority priority = response.extractPriority();
+        String reasoning = response.extractReasoning();
 
-  - Webhook:
-      endpoint: /api/v1/briefs/submit
-      auth: bearer-token
+        logger.info("Decision: Brief {} assigned priority {} - Reasoning: {}",
+            brief.getCampaignId(), priority, reasoning);
+
+        return new ProcessingDecision(brief, priority, reasoning);
+    }
+
+    public ResolutionStrategy triageQualityIssues(QualityReport report) {
+        // LLM decides how to handle quality issues
+        String prompt = buildTriagePrompt(report);
+        LLMResponse response = llm.reason(prompt);
+
+        ResolutionStrategy strategy = response.extractStrategy();
+
+        // Route to appropriate agent
+        if (strategy.requiresRegeneration()) {
+            executingAgent.regenerateAssets(report.getCampaignId(), strategy);
+        }
+
+        if (strategy.requiresCommunication()) {
+            communicationAgent.notifyStakeholders(report, strategy);
+        }
+
+        return strategy;
+    }
+
+    public RetryStrategy handleFailure(FailureEvent event) {
+        // Intelligent retry decision based on failure type
+        String prompt = String.format("""
+            A campaign generation failed with the following details:
+            - Campaign: %s
+            - Failure Type: %s
+            - Error Message: %s
+            - Previous Attempts: %d
+            - System Load: %s
+            - GenAI API Status: %s
+
+            Decide the best retry strategy:
+            1. Immediate retry (if transient error)
+            2. Delayed retry with backoff (if rate limit)
+            3. Switch to backup GenAI provider (if API down)
+            4. Use fallback mock generation (if deadline critical)
+            5. Escalate to human intervention (if unrecoverable)
+
+            Provide: strategy, reasoning, estimated success probability
+            """,
+            event.getCampaignId(),
+            event.getFailureType(),
+            event.getErrorMessage(),
+            event.getAttemptCount(),
+            monitor.getSystemLoad(),
+            monitor.getGenAIStatus()
+        );
+
+        LLMResponse response = llm.reason(prompt);
+        return response.extractRetryStrategy();
+    }
+
+    private String buildPriorityPrompt(CampaignBrief brief, SystemContext context) {
+        return String.format("""
+            You are a campaign prioritization system. Analyze this brief and assign priority.
+
+            BRIEF:
+            - Campaign ID: %s
+            - Client: %s (Tier: %s)
+            - Deadline: %s (%s remaining)
+            - Products: %d
+            - Localizations: %d
+            - Complexity: %s
+
+            SYSTEM STATE:
+            - Queue Depth: %d campaigns
+            - Average Processing Time: %s
+            - Current Success Rate: %.1f%%
+            - Available Capacity: %d concurrent jobs
+
+            PRIORITY RULES:
+            - HIGH: Deadline < 24h OR Enterprise client with tight deadline
+            - MEDIUM: Deadline 24-72h OR High-value client
+            - LOW: Deadline > 72h AND Standard client
+
+            Assign priority (HIGH/MEDIUM/LOW) with brief reasoning.
+            """,
+            brief.getCampaignId(),
+            brief.getClientName(),
+            brief.getClientTier(),
+            brief.getDeadline(),
+            context.getTimeToDeadline(),
+            brief.getProducts().size(),
+            brief.getLocalizations().size(),
+            brief.getComplexity(),
+            context.getQueueDepth(),
+            context.getAverageProcessingTime(),
+            context.getSuccessRate() * 100,
+            context.getAvailableCapacity()
+        );
+    }
+}
 ```
 
-**Validation Checks**:
-1. Valid YAML/JSON syntax
-2. Required fields present (campaignId, products, targetRegion, etc.)
-3. Product assets exist or can be generated
-4. Localization configs are complete
-5. Brand guidelines are specified
+### 3. Executing Agent
 
-**Queue Management**:
+**Role**: Executes campaign generation pipeline and manages asset creation workflow.
+
+**Capabilities**:
+- **Pipeline Execution**: Runs the existing CreativeAutomationPipeline (BriefParser → CreativeGenerator → ComplianceValidator)
+- **Resource Management**: Controls concurrent execution based on system capacity
+- **Retry Logic**: Implements intelligent retry with exponential backoff
+- **Fallback Strategies**: Switches between GenAI providers or uses mock generation
+- **Asset Storage**: Manages output file organization and storage
+
+**Execution Workflow**:
 ```java
-public class BriefMonitorAgent {
-    public void processBrief(Path briefPath) {
+public class ExecutingAgent {
+    private CreativeGenerator generator;
+    private DecisionAgent decisionAgent;
+    private MonitoringAgent monitoringAgent;
+
+    @Async
+    public CompletableFuture<GenerationResult> executeGeneration(
+            ProcessingDecision decision) {
+
+        CampaignBrief brief = decision.getBrief();
+        String campaignId = brief.getCampaignId();
+
+        logger.info("Executing generation for campaign: {} (Priority: {})",
+            campaignId, decision.getPriority());
+
         try {
-            // Validate
-            CampaignBrief brief = validator.validate(briefPath);
+            // Execute main pipeline
+            GenerationResult result = generator.generateCampaignAssets(brief);
 
-            // Calculate priority
-            Priority priority = calculatePriority(brief);
+            // Send to Monitoring Agent for quality validation
+            QualityReport qualityReport = monitoringAgent.validateQuality(result);
 
-            // Enqueue
-            queue.add(new QueuedCampaign(brief, priority));
+            // If issues found, Decision Agent determines next steps
+            if (!qualityReport.getIssues().isEmpty()) {
+                ResolutionStrategy strategy =
+                    decisionAgent.triageQualityIssues(qualityReport);
 
-            // Log
-            logger.info("Brief {} queued with priority {}",
-                brief.getCampaignId(), priority);
+                if (strategy.requiresRegeneration()) {
+                    return regenerateAssets(brief, strategy);
+                }
+            }
 
-            // Alert orchestrator
-            orchestrator.notifyNewBrief(brief);
+            return CompletableFuture.completedFuture(result);
 
-        } catch (ValidationException e) {
-            handleInvalidBrief(briefPath, e);
+        } catch (Exception e) {
+            return handleExecutionFailure(brief, e);
         }
     }
 
-    private Priority calculatePriority(CampaignBrief brief) {
-        // High: < 24 hours to deadline
-        // Medium: 24-72 hours
-        // Low: > 72 hours
-        Duration timeToDeadline = calculateTimeToDeadline(brief);
+    private CompletableFuture<GenerationResult> handleExecutionFailure(
+            CampaignBrief brief, Exception error) {
 
-        if (timeToDeadline.toHours() < 24) return Priority.HIGH;
-        if (timeToDeadline.toHours() < 72) return Priority.MEDIUM;
-        return Priority.LOW;
+        FailureEvent event = new FailureEvent(brief, error);
+
+        // Ask Decision Agent for retry strategy
+        RetryStrategy strategy = decisionAgent.handleFailure(event);
+
+        switch (strategy.getType()) {
+            case IMMEDIATE_RETRY:
+                logger.info("Retrying immediately: {}", brief.getCampaignId());
+                return executeGeneration(new ProcessingDecision(brief));
+
+            case DELAYED_RETRY:
+                logger.info("Scheduling delayed retry in {}ms", strategy.getDelayMs());
+                return scheduleRetry(brief, strategy.getDelayMs());
+
+            case SWITCH_PROVIDER:
+                logger.info("Switching to backup GenAI provider");
+                return executeWithBackupProvider(brief);
+
+            case USE_FALLBACK:
+                logger.info("Using fallback mock generation");
+                return executeWithMockGeneration(brief);
+
+            case ESCALATE:
+                logger.error("Unrecoverable error, escalating to human intervention");
+                communicationAgent.escalateCriticalFailure(brief, error);
+                return CompletableFuture.failedFuture(error);
+        }
+
+        return CompletableFuture.failedFuture(error);
+    }
+
+    public CompletableFuture<GenerationResult> regenerateAssets(
+            String campaignId, ResolutionStrategy strategy) {
+
+        logger.info("Regenerating assets for campaign: {} - Strategy: {}",
+            campaignId, strategy.getDescription());
+
+        // Load original brief
+        CampaignBrief brief = loadBrief(campaignId);
+
+        // Apply strategy modifications (e.g., specific aspect ratios only)
+        if (strategy.hasTargetProducts()) {
+            brief = filterProducts(brief, strategy.getTargetProducts());
+        }
+
+        if (strategy.hasTargetAspectRatios()) {
+            brief = filterAspectRatios(brief, strategy.getTargetAspectRatios());
+        }
+
+        // Re-execute
+        return executeGeneration(new ProcessingDecision(brief));
+    }
+
+    @Scheduled(fixedRate = 5000) // Every 5 seconds
+    public void processQueue() {
+        // Check if we have capacity
+        if (!hasCapacity()) {
+            return;
+        }
+
+        // Get next priority campaign from Decision Agent
+        Optional<ProcessingDecision> next = decisionAgent.getNextToProcess();
+
+        if (next.isPresent()) {
+            executeGeneration(next.get());
+        }
+    }
+
+    private boolean hasCapacity() {
+        int active = getActiveGenerations();
+        int maxConcurrent = config.getMaxConcurrentGenerations();
+        return active < maxConcurrent;
     }
 }
 ```
 
-### 3. Quality Guardian Agent
+### 4. Communication Agent
 
-**Role**: Ensures output quality and completeness; flags issues proactively.
-
-**Capabilities**:
-- **Variant Counting**: Tracks number of assets generated per product/locale
-- **Diversity Analysis**: Ensures aspect ratio coverage (1:1, 9:16, 16:9)
-- **Compliance Monitoring**: Aggregates compliance violations
-- **Asset Validation**: Checks image quality, file sizes, dimensions
-- **Anomaly Detection**: Flags unusual patterns (all failures, low quality scores)
-
-**Flagging Rules**:
-
-| Condition | Severity | Action |
-|-----------|----------|--------|
-| < 3 variants per product | WARNING | Alert stakeholder, suggest manual review |
-| Missing aspect ratio | ERROR | Halt campaign, request asset regeneration |
-| > 50% compliance failures | CRITICAL | Escalate to creative director |
-| GenAI API failure | CRITICAL | Alert engineering team, use fallback |
-| Processing time > 2x average | WARNING | Investigate performance bottleneck |
-
-**Implementation**:
-```java
-public class QualityGuardianAgent {
-    private static final int MIN_VARIANTS = 3;
-    private static final Set<String> REQUIRED_RATIOS = Set.of("1:1", "9:16", "16:9");
-
-    public QualityReport analyze(GenerationResult result) {
-        List<QualityIssue> issues = new ArrayList<>();
-
-        // 1. Check variant count per product
-        Map<String, Integer> variantCounts = countVariantsByProduct(result);
-        for (var entry : variantCounts.entrySet()) {
-            if (entry.getValue() < MIN_VARIANTS) {
-                issues.add(QualityIssue.builder()
-                    .severity(Severity.WARNING)
-                    .type(IssueType.INSUFFICIENT_VARIANTS)
-                    .productId(entry.getKey())
-                    .message(String.format("Product %s has only %d variants (minimum: %d)",
-                        entry.getKey(), entry.getValue(), MIN_VARIANTS))
-                    .recommendation("Generate additional aspect ratios or platform variants")
-                    .build());
-            }
-        }
-
-        // 2. Check aspect ratio coverage
-        Set<String> generatedRatios = result.getAssets().stream()
-            .map(a -> a.getAspectRatio().getName())
-            .collect(Collectors.toSet());
-
-        Set<String> missing = new HashSet<>(REQUIRED_RATIOS);
-        missing.removeAll(generatedRatios);
-
-        if (!missing.isEmpty()) {
-            issues.add(QualityIssue.builder()
-                .severity(Severity.ERROR)
-                .type(IssueType.MISSING_ASPECT_RATIOS)
-                .message("Missing required aspect ratios: " + String.join(", ", missing))
-                .recommendation("Regenerate campaign with all required aspect ratios")
-                .build());
-        }
-
-        // 3. Check compliance failures
-        long complianceFailures = result.getAssets().stream()
-            .filter(a -> !a.getMetadata().getComplianceChecks().isBrandCompliant() ||
-                         !a.getMetadata().getComplianceChecks().isLegalCompliant())
-            .count();
-
-        double failureRate = (double) complianceFailures / result.getAssets().size();
-
-        if (failureRate > 0.5) {
-            issues.add(QualityIssue.builder()
-                .severity(Severity.CRITICAL)
-                .type(IssueType.HIGH_COMPLIANCE_FAILURE_RATE)
-                .message(String.format("%.0f%% of assets failed compliance checks",
-                    failureRate * 100))
-                .recommendation("Review brand guidelines and prohibited words configuration")
-                .build());
-        }
-
-        // 4. Generate quality score
-        double qualityScore = calculateQualityScore(result, issues);
-
-        return QualityReport.builder()
-            .campaignId(result.getCampaignId())
-            .issues(issues)
-            .qualityScore(qualityScore)
-            .timestamp(Instant.now())
-            .build();
-    }
-
-    private double calculateQualityScore(GenerationResult result, List<QualityIssue> issues) {
-        double baseScore = 100.0;
-
-        // Deduct points for issues
-        for (QualityIssue issue : issues) {
-            switch (issue.getSeverity()) {
-                case CRITICAL -> baseScore -= 25;
-                case ERROR -> baseScore -= 15;
-                case WARNING -> baseScore -= 5;
-            }
-        }
-
-        // Bonus for successful generation
-        if (result.isSuccess() && issues.isEmpty()) {
-            baseScore = 100.0;
-        }
-
-        return Math.max(0, baseScore);
-    }
-}
-```
-
-### 4. Stakeholder Communicator Agent
-
-**Role**: Drafts human-readable communications for stakeholders using LLM.
+**Role**: Manages all stakeholder communications using LLM-powered drafting and multi-channel delivery.
 
 **Capabilities**:
-- **Context-Aware Messaging**: Uses LLM to draft appropriate messages based on issue type
+- **LLM-Powered Drafting**: Uses LLM with MCP context to draft appropriate messages based on issue type
 - **Multi-Channel Delivery**: Email, Slack, PagerDuty, JIRA tickets
 - **Tone Adjustment**: Formal for clients, technical for engineering, concise for executives
 - **Template Management**: Maintains communication templates with LLM enhancement
 - **Follow-up Tracking**: Monitors acknowledgment and response
+- **Escalation Management**: Routes alerts based on severity levels
+
+**Communication Workflow**:
+```java
+public class CommunicationAgent {
+    private LLMService llm;
+    private EmailService emailService;
+    private SlackService slackService;
+    private PagerDutyService pagerDutyService;
+
+    public void notifyStakeholders(QualityReport report, ResolutionStrategy strategy) {
+        // Build MCP context for LLM
+        MCPContext context = buildMCPContext(report, strategy);
+
+        // LLM drafts appropriate message
+        String draftEmail = llm.draftCommunication(context);
+
+        // Send via appropriate channels based on severity
+        if (report.getSeverity() == Severity.CRITICAL) {
+            sendCriticalAlert(context, draftEmail);
+        } else if (report.getSeverity() == Severity.ERROR) {
+            sendErrorAlert(context, draftEmail);
+        } else {
+            sendWarningAlert(context, draftEmail);
+        }
+
+        // Track communication
+        trackCommunication(report.getCampaignId(), draftEmail);
+    }
+
+    private void sendCriticalAlert(MCPContext context, String message) {
+        // Email to executives
+        emailService.sendToExecutives(context.getCampaignContact(), message);
+
+        // Slack to #incidents
+        slackService.postToChannel("#incidents", formatSlackAlert(context));
+
+        // PagerDuty incident
+        pagerDutyService.triggerIncident(context, message);
+
+        // SMS to on-call
+        smsService.sendToOnCall(context.getOnCallContact(),
+            "CRITICAL: Campaign " + context.getCampaignId() + " requires attention");
+    }
+}
+```
 
 ---
 
